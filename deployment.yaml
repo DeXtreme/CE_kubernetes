@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webserver-deployment
+  labels:
+    app: my-webserver
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: my-webserver
+  template:
+    metadata:
+      labels:
+        app: my-webserver
+    spec:
+      containers:
+        - name: my-webserver
+          image: dextreme/ce_docker:v1
+          ports:
+            - containerPort: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: my-service
+spec:
+  selector:
+    app: my-webserver
+  type: LoadBalancer
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 80
+      nodePort: 30002
